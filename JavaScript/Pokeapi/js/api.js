@@ -7,8 +7,22 @@ window.onload = () => {
     formulario.addEventListener('submit', nombrePokemon);
 }
 
+cardPokemon();
+
+// Mostrar primeros 20 pokemones
+function cardPokemon(){
+    let URL = "https://pokeapi.co/api/v2/pokemon/";
+    for (let i = 1; i <= 20; i++) {
+        fetch(URL + i)
+        .then((response) => response.json())
+        .then(data => mostrarPokemon(data))
+    }
+}
+
+//Buscar Pokemon
 function nombrePokemon(e){
     e.preventDefault();
+    listaPokemon.innerHTML = "";
     const termino = document.querySelector("#termino").value;
     const url = `https://pokeapi.co/api/v2/pokemon/${termino}`;
 
@@ -18,24 +32,32 @@ function nombrePokemon(e){
 }
 
 //Mostrar pokemon
-
 function mostrarPokemon(poke){
-
+    // Filtrar los tipos
     let tipos = poke.types.map(type => `
         <p class="tipo ${type.type.name}">${type.type.name}</p>
     `);
+    
+    tipos = tipos.join('');
+    let pokeId = poke.id.toString();
+    if(pokeId.length === 1){
+        pokeId = "00" + pokeId;
+    }else if(pokeId.length === 2){
+        pokeId = "0" + pokeId;
+    }
 
+    // Pintar Api
     const div = document.createElement("div");
      div.classList.add("pokemon");
      div.innerHTML = `
-     <p class="pokemon-id-back">#${poke.id}</p>
+     <p class="pokemon-id-back">#${pokeId}</p>
      <div class="pokemon-imagen">
          <img src="${poke.sprites.other["official-artwork"].front_default}" alt="${poke.name}">
      </div>
      <div class="pokemon-info">
          <div class="nombre-contenedor">
              <p class="pokemon-id">
-                 #${poke.id}
+                 #${pokeId}
              </p>
              <h2 class="pokemon-nombre">
                  ${poke.name}
@@ -53,4 +75,27 @@ function mostrarPokemon(poke){
     listaPokemon.append(div);
 }
 
+//Botones para los filtros
+botonesHeader.forEach(boton => boton.addEventListener("click", (event) => {
+    let URL = "https://pokeapi.co/api/v2/pokemon/";
+    const botonId = event.currentTarget.id;
+    listaPokemon.innerHTML = "";
+    for (let i = 1; i <= 151; i++) {
+        fetch(URL + i)
+        .then((response) => response.json())
+        .then(data => {
+            if(botonId === "ver-todos"){
+                mostrarPokemon(data);
+            }else {
+                const tipos = data.types.map(type => type.type.name);
+                if(tipos.some(tipo => tipo.includes(botonId))){
+                    mostrarPokemon(data);
+                }
+            }
+        })
+    }
+}))
 
+// Paginacion 20 a 20
+
+// Ventana modal
