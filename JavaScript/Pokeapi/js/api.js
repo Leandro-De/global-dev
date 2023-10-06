@@ -1,25 +1,23 @@
-
 const listaPokemon = document.querySelector("#listaPokemon");
 const botonesHeader = document.querySelectorAll(".btn-header");
 const formulario = document.querySelector("#form");
-let URL = "https://pokeapi.co/api/v2/pokemon/";
 
-for (let i = 1; i <= 151; i++) {
-    fetch(URL + i)
-    .then((response) => response.json())
-    .then(data => mostrarPokemon(data))
-}
-
+//Buscar Pokemon
 window.onload = () => {
-    formulario.addEventListener('submit', buscarPokemon);
+    formulario.addEventListener('submit', nombrePokemon);
 }
 
-function buscarPokemon(e){
+function nombrePokemon(e){
     e.preventDefault();
     const termino = document.querySelector("#termino").value;
     const url = `https://pokeapi.co/api/v2/pokemon/${termino}`;
-       
+
+    fetch(url)
+        .then(response => response.json())
+        .then(resultado => mostrarPokemon(resultado))
 }
+
+//Mostrar pokemon
 
 function mostrarPokemon(poke){
 
@@ -27,26 +25,17 @@ function mostrarPokemon(poke){
         <p class="tipo ${type.type.name}">${type.type.name}</p>
     `);
 
-    tipos = tipos.join('');
-
-    let pokeId = poke.id.toString();
-    if(pokeId.length === 1){
-        pokeId = "00" + pokeId;
-    }else if(pokeId.length === 2){
-        pokeId = "0" + pokeId;
-    }
- 
-     const div = document.createElement("div");
+    const div = document.createElement("div");
      div.classList.add("pokemon");
      div.innerHTML = `
-     <p class="pokemon-id-back">#${pokeId}</p>
+     <p class="pokemon-id-back">#${poke.id}</p>
      <div class="pokemon-imagen">
          <img src="${poke.sprites.other["official-artwork"].front_default}" alt="${poke.name}">
      </div>
      <div class="pokemon-info">
          <div class="nombre-contenedor">
              <p class="pokemon-id">
-                 #${pokeId}
+                 #${poke.id}
              </p>
              <h2 class="pokemon-nombre">
                  ${poke.name}
@@ -64,23 +53,4 @@ function mostrarPokemon(poke){
     listaPokemon.append(div);
 }
 
-botonesHeader.forEach(boton => boton.addEventListener("click", (event) => {
-    const botonId = event.currentTarget.id;
-    listaPokemon.innerHTML = "";
-    for (let i = 1; i <= 151; i++) {
-        fetch(URL + i)
-        .then((response) => response.json())
-        .then(data => {
 
-            if(botonId === "ver-todos"){
-                mostrarPokemon(data);
-            }else {
-                const tipos = data.types.map(type => type.type.name);
-                if(tipos.some(tipo => tipo.includes(botonId))){
-                    mostrarPokemon(data);
-                }
-            }
-        })
-    }
-
-}))
