@@ -82,5 +82,4 @@ botonesHeader.forEach(boton => boton.addEventListener("click", (event) => {
             }
         })
     }
-
 }))

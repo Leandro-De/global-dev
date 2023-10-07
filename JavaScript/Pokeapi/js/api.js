@@ -1,18 +1,46 @@
 const listaPokemon = document.querySelector("#listaPokemon");
 const botonesHeader = document.querySelectorAll(".btn-header");
 const formulario = document.querySelector("#form");
+const btnPrevious = document.querySelector("#anterior");
+const btnSiguiente = document.querySelector("#siguiente");
+
+// Variables para la paginacion
+let offset = 1;
+let limit = 8;
+
+// paginacion
+btnPrevious.addEventListener('click', () =>{
+    if(offset != 1){
+        listaPokemon.innerHTML = "";
+        offset -=9;
+        cardPokemon(offset, limit);
+    }
+});
+/*
+// los muestra en seguida de los anteriores
+btnSiguiente.addEventListener('click', () =>{
+    offset +=9;
+    cardPokemon(offset, limit);
+});
+*/
+// Elimina los anteriores y muestra los nuevos
+btnSiguiente.addEventListener('click', () =>{
+    offset +=9;
+    listaPokemon.innerHTML = "";
+    cardPokemon(offset, limit);
+});
 
 //Buscar Pokemon
 window.onload = () => {
     formulario.addEventListener('submit', nombrePokemon);
 }
 
-cardPokemon();
+cardPokemon(offset, limit);
 
-// Mostrar primeros 20 pokemones
-function cardPokemon(){
+// Mostrar pokemones que se definan como offset y limit
+function cardPokemon(offset, limit){
     let URL = "https://pokeapi.co/api/v2/pokemon/";
-    for (let i = 1; i <= 20; i++) {
+    for (let i = offset; i <= offset + limit; i++) {
         fetch(URL + i)
         .then((response) => response.json())
         .then(data => mostrarPokemon(data))
@@ -96,6 +124,5 @@ botonesHeader.forEach(boton => boton.addEventListener("click", (event) => {
     }
 }))
 
-// Paginacion 20 a 20
 
 // Ventana modal

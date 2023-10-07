@@ -222,6 +222,32 @@ main{
     border-radius: 100vmax;
 }
 
+/*Paginador*/
+
+.paginador{
+    width: 30%;
+    margin: 1rem 0rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.paginador button{
+    cursor: pointer;
+    background-color: var(--type-water);
+    color: var(--clr-white);
+    padding: 1rem;
+    border-radius: 100vmax;
+    font-weight: 600;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, .25);
+    transition: ease .2s;
+}
+
+.paginador button:hover{
+    transform: scale(1.1);
+    box-shadow: 0 0 2rem rgba(0, 0, 0, .25);
+}
+
 /* Aquí comienzan los colores de botones según tipo */
 .normal {
     background-color: var(--type-normal);
